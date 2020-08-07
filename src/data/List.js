@@ -1852,7 +1852,13 @@ listProto.setLayout = function (key, val) {
 listProto.getLayout = function (key) {
     return this._layout[key];
 };
-
+/*
+ * Get layout of single data all
+ *
+ */
+listProto.getAllLayout = function () {
+    return this._itemLayouts;
+};
 /**
  * Get layout of single data item
  * @param {number} idx
@@ -1860,6 +1866,7 @@ listProto.getLayout = function (key) {
 listProto.getItemLayout = function (idx) {
     return this._itemLayouts[idx];
 };
+
 
 /**
  * Set layout of single data item

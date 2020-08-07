@@ -41,9 +41,10 @@ function _trim(str) {
  * @param  {Array.<number>} domain Domain extent domain[0] can be bigger than domain[1]
  * @param  {Array.<number>} range  Range extent range[0] can be bigger than range[1]
  * @param  {boolean} clamp
+ * @param {boolean} roseType
  * @return {(number|Array.<number>}
  */
-export function linearMap(val, domain, range, clamp) {
+export function linearMap(val, domain, range, clamp, roseType) {
     var subDomain = domain[1] - domain[0];
     var subRange = range[1] - range[0];
 
@@ -77,6 +78,9 @@ export function linearMap(val, domain, range, clamp) {
         }
     }
     else {
+        if (roseType) {
+            return (val - domain[0]) / subDomain * subRange + range[1] / 2;
+        }
         if (val === domain[0]) {
             return range[0];
         }
@@ -84,9 +88,9 @@ export function linearMap(val, domain, range, clamp) {
             return range[1];
         }
     }
-
     return (val - domain[0]) / subDomain * subRange + range[0];
 }
+
 
 /**
  * Convert a percent string to absolute number.

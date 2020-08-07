@@ -133,15 +133,39 @@ export default function (seriesType, ecModel, api, payload) {
                 cx: cx,
                 cy: cy,
                 r0: r0,
-                r: roseType
-                    ? linearMap(value, extent, [r0, r])
-                    : r,
+                r: roseType === 'radius-reverse'
+                    ? linearMap(value, extent, [r0, r], undefined, true)
+                    : roseType
+                        ? linearMap(value, extent, [r0, r])
+                        : r,
                 viewRect: viewRect
             });
 
             currentAngle = endAngle;
         });
+        if (roseType === 'radius-reverse') {
+            // 取出所有r  并记录index
+            var arrayR = data.getAllLayout().map(function (item, index) {
+                return {
+                    value: item.r,
+                    useIndex: index
+                };
+            });
+            // 从大到小排序
+            var newArrayR = arrayR.sort(function (a, b) {
+                return a.value - b.value;
+            });
+            // 重新排序 最大和最小交换位置
+            var userdata = [];
+            newArrayR.forEach(function (item, index, arry) {
+                userdata[item.useIndex] = arry[-(index - (arry.length - 1))];
+            });
 
+            // 重新赋值给data
+            userdata.forEach(function (item, index) {
+                data.setItemLayout(index, {r: userdata[index].value}, true);
+            });
+        }
         // Some sector is constrained by minAngle
         // Rest sectors needs recalculate angle
         if (restAngle < PI2 && validDataCount) {
